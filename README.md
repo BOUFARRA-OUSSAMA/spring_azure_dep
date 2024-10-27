@@ -84,6 +84,30 @@ You can use Postman or any other API testing tool to test the endpoints. Here's 
     "password": "password123"
 }
 ```
+## 📚 Integrating BookScrapper into BooksFrog Backend
+
+
+
+The `booksfrog_bookScrapper` is an external script that helps you automatically download books and scrape essential information such as the author, book description, and more. To integrate it with your backend, please refer to the repository for detailed instructions:
+
+
+
+[booksfrog_bookScrapper Repository](https://github.com/AhmedFatrah2001/booksfrog_bookScrapper)
+
+
+
+Ensure the downloaded data aligns with your backend database structure and logic.
+
+
+
+### Quick Setup Steps:
+
+1. Clone the `booksfrog_bookScrapper` repository into your backend project.
+
+2. Follow the repository's instructions to set up the scrapper and its dependencies.
+
+3. Ensure your backend integrates with the data stored by the scraper in the database.
+
 
 ## License
 
