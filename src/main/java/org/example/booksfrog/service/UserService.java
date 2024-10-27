@@ -3,6 +3,7 @@ package org.example.booksfrog.service;
 import org.example.booksfrog.model.User;
 import org.example.booksfrog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +13,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
@@ -26,6 +29,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        // Hash the password before saving the user
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         return userRepository.save(user);
     }
 
@@ -34,6 +40,16 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+        // Hash the password before updating the user
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
+        }
         return userRepository.save(user);
+    }
+
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        // Check if raw password matches the encoded password
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }
