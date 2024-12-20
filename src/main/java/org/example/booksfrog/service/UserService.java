@@ -52,4 +52,13 @@ public class UserService {
         // Check if raw password matches the encoded password
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+    // Check if a username is already taken
+    public boolean isUsernameTaken(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    // Check if an email is already taken
+    public boolean isEmailTaken(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

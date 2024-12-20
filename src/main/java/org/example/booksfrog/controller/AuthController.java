@@ -8,6 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.example.booksfrog.model.User;
+import org.example.booksfrog.service.UserService;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,6 +24,9 @@ public class AuthController {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
     // POST method for login and token generation
     @PostMapping("/login")
@@ -40,7 +46,87 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
+    // POST method for user registration
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        // Validate required fields
+        if (registerRequest.getUsername() == null || registerRequest.getUsername().isEmpty() ||
+                registerRequest.getEmail() == null || registerRequest.getEmail().isEmpty() ||
+                registerRequest.getPassword() == null || registerRequest.getPassword().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username, email, and password are mandatory.");
+        }
+
+        // Check if the username or email is already taken
+        if (userService.isUsernameTaken(registerRequest.getUsername()) ||
+                userService.isEmailTaken(registerRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or email already taken.");
+        }
+
+        // Create a new user
+        User newUser = User.builder()
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .password(registerRequest.getPassword()) // Encrypt password before saving
+                .isPremium(registerRequest.getIsPremium() != null && registerRequest.getIsPremium()) // Optional
+                .profilePicture(registerRequest.getProfilePicture()) // Optional
+                .build();
+
+        User createdUser = userService.createUser(newUser);
+
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
 }
+
+// Updated RegisterRequest to handle mandatory and optional fields
+class RegisterRequest {
+    private String username; // Mandatory
+    private String email;    // Mandatory
+    private String password; // Mandatory
+    private Boolean isPremium; // Optional
+    private byte[] profilePicture; // Optional
+
+    // Getters and setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(Boolean isPremium) {
+        this.isPremium = isPremium;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+}
+
 
 // Separate AuthRequest class for username and password
 class AuthRequest {
