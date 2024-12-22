@@ -97,6 +97,7 @@
     </dependencies>
 
     <build>
+    <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -107,5 +108,6 @@
                 <release>21</release>
             </configuration>
         </plugin>
+    </plugins>
     </build>
 </project>
