@@ -42,9 +42,16 @@ public class AuthController {
         // Generate JWT token
         String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        // Return the generated token
-        return ResponseEntity.ok(new AuthResponse(token));
+        // Fetch user entity
+        User user = userService.findByUsername(userDetails.getUsername());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+
+        // Return token and user details
+        return ResponseEntity.ok(new AuthResponse(token, user));
     }
+
 
     // POST method for user registration
     @PostMapping("/register")
@@ -167,19 +174,58 @@ class AuthRequest {
 // Separate AuthResponse class for returning the token
 class AuthResponse {
     private String token;
+    private String username;
+    private String email;
+    private boolean isPremium;
+    private byte[] profilePicture;
 
-    // Constructor to initialize the token
-    public AuthResponse(String token) {
+    public AuthResponse(String token, User user) {
         this.token = token;
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.isPremium = user.isPremium();
+        this.profilePicture = user.getProfilePicture();
     }
 
-    // Getter for the token
+    // Getters and setters
     public String getToken() {
         return token;
     }
 
-    // Setter for the token (if needed)
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(boolean premium) {
+        isPremium = premium;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 }
+

@@ -1,5 +1,6 @@
 package org.example.booksfrog.controller;
 
+import org.example.booksfrog.dto.BookDTO;
 import org.example.booksfrog.model.Book;
 import org.example.booksfrog.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,14 @@ public class BookController {
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/latest")
+    public List<BookDTO> getLast12Books() {
+        return bookService.getLast12Books();
+    }
+    @GetMapping
+    public ResponseEntity<List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 }

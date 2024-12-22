@@ -37,4 +37,8 @@ public class User {
     protected void onCreate() {
         registrationDate = LocalDateTime.now();
     }
+
+    public boolean isPremium() {
+        return this.isPremium;
+    }
 }
