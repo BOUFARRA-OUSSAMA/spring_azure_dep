@@ -16,7 +16,7 @@ Before running the project, ensure you have the following installed:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/AhmedFatrah2001/booksfrog_backend.git
+git clone [https://github.com/AhmedFatrah2001/booksfrog_backend.git](https://github.com/BOUFARRA-OUSSAMA/spring_azure_dep.git)
 ```
 
 2. Navigate to the project directory:
@@ -73,7 +73,7 @@ The server will start on `http://localhost:8080`.
 
 You can use Postman or any other API testing tool to test the endpoints. Here's an example of how to test a `POST` request to create a new user:
 
-- URL: `http://localhost:8080/users/register`
+- URL: `http://localhost:8080/api/auth/register`
 - Method: `POST`
 - Body (JSON):
 
